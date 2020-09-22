@@ -1,35 +1,17 @@
 import React from 'react';
 import slugify from 'slugify';
 import ItemCategory from './ItemCategory';
-
-// This object will allow us to
-// easily convert numbers into US dollar values
-const USCurrencyFormat = new Intl.NumberFormat('en-US', {
-  style: 'currency',
-  currency: 'USD'
-});
+import FeatureItem from './FeatureItem';
 
 const BuildYourLaptop = (props) => {
   //creating each 'feature' HTML element; Object.keys turns Object.properties in to an array of keys
   const features = Object.keys(props.features).map((feature, idx) => {
     const featureHash = feature + '-' + idx;
     //creates options for each item category + generating HTML
-    const options = props.features[feature].map(item => {
+    const options = props.features[feature].map((item, idx) => {
       const itemHash = slugify(JSON.stringify(item));
       return (
-        <div key={itemHash} className="feature__item">
-          <input
-            type="radio"
-            id={itemHash}
-            className="feature__option"
-            name={slugify(feature)}
-            checked={item.name === props.selected[feature].name}
-            onChange={e => props.updateFeature(feature, item)}
-          />
-          <label htmlFor={itemHash} className="feature__label">
-            {item.name} ({USCurrencyFormat.format(item.cost)})
-          </label>
-        </div>
+        <FeatureItem key={idx} itemHash={itemHash} optionItem={item} feature={feature} featureHash={featureHash} selected={props.selected} updateFeature={props.updateFeature}/>
       );
     });
     //return for function
@@ -50,7 +32,7 @@ const BuildYourLaptop = (props) => {
 Identify usecase for new component
 Figure out what we need to migrate to new component
 Call new component to pass the props it just received from parent
-
+-----------------------------------------------------------------------------------
 Find largest subset or chunk of HTML that can be its own standalone component
 Transfer what is needed in new component that still exists in App
 Pass what needs to be used in state for this component as props in return statement
